@@ -2,6 +2,7 @@
 <head>
     <title>Survey</title>
     <span th:insert="home :: stylesheet"></span>
+    <link rel="stylesheet" th:href="@{/css/question/show.css}" />
 </head>
 <body>
     <div class="container">
@@ -25,23 +26,6 @@
     </form>
     </div>
     <span th:insert="home :: footer"></span>
-    <script>
-        $(function(){
-
-            var requiredCheckboxes = $(':checkbox[required]');
-
-            requiredCheckboxes.change(function(){
-
-                if(requiredCheckboxes.is(':checked')) {
-                    requiredCheckboxes.removeAttr('required');
-                }
-
-                else {
-                    requiredCheckboxes.attr('required', 'required');
-                }
-            });
-
-            });
-    </script>
+    <script th:src="@{/js/question/show.js}"></script>
 </body>
 </html>

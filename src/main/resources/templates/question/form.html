@@ -18,16 +18,18 @@
             <label>Multiple</label>
             <input type="checkbox" name="multiple" />
         </div>
-        <div>
+        <div class="options">
             <div th:each="option, stat: *{options}">
                 <input th:field="*{options[__${stat.index}__].text}" type="text" />
                 <input th:field="*{options[__${stat.index}__].value}" type="number" />
             </div>
         </div>
         <input type="hidden" name="id" th:value="*{id}" />
-        <input type="submit" value="Salva" />
+        <input type="submit" value="Salva" class="btn btn-primary" />
+        <a href="#" class="addOption btn btn-info">Add Option</a>
     </form>
     </div>
     <span th:insert="home :: footer"></span>
+    <script th:src="@{/js/question/form.js}"></script>
 </body>
 </html>

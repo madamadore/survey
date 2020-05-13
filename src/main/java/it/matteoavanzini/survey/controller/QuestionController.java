@@ -52,7 +52,7 @@ public class QuestionController {
         return "question/list";
     }
 
-    @GetMapping("/{id}/edit")
+    @GetMapping("/{id:[\\d]+}/edit")
     public String edit(@PathVariable("id") int id, Model model) {
         Question question = service.getQuestion(id);
         model.addAttribute("question", question);
