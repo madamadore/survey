@@ -10,6 +10,7 @@ import lombok.Setter;
 @Setter
 public class Question {
     public static long ID = 0;
+    
     private long id;
     private String title;
     private String description;
@@ -17,7 +18,7 @@ public class Question {
     private List<Option> options;
 
     public Question() {
-        this.id = ++ID;
+        this.id = ++Question.ID;
         this.options = new ArrayList<>();
     }
     

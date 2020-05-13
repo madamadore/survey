@@ -28,7 +28,7 @@ public class QuestionController {
 
     @GetMapping("/{qid:[\\d]+}/show")
     public String show(Model model, @PathVariable("qid") int questionId) {
-        Question question = service.get(questionId);
+        Question question = service.getQuestion(questionId);
         if (question != null) {
             model.addAttribute("question", question);
             return "question/show";
@@ -51,28 +51,28 @@ public class QuestionController {
         return "redirect:/";
     }
 
-    // @PostMapping("/save")
-    // public String saveWithParam(@RequestParam String title, @RequestParam String description) {
-    //     Question q = new Question();
-    //     q.setTitle(title);
-    //     q.setDescription(description);
+    // metodo inutile, solo per esempio
+    public String saveWithParam(@RequestParam String title, @RequestParam String description) {
+        Question q = new Question();
+        q.setTitle(title);
+        q.setDescription(description);
 
-    //     // salvo l'oggetto sul db
+        // salvo l'oggetto sul db
 
-    //     return "redirect:/";
-    // }
+        return "redirect:/";
+    }
 
-    // @PostMapping("/save")
-    // public String saveWithRequest(HttpServletRequest req) {
-    //     String title = req.getParameter("title");
-    //     String description = req.getParameter("description");
+    // metodo inutile, solo per esempio
+    public String saveWithRequest(HttpServletRequest req) {
+        String title = req.getParameter("title");
+        String description = req.getParameter("description");
 
-    //     Question q = new Question();
-    //     q.setTitle(title);
-    //     q.setDescription(description);
+        Question q = new Question();
+        q.setTitle(title);
+        q.setDescription(description);
 
-    //     // salvo l'oggetto sul db
+        // salvo l'oggetto sul db
 
-    //     return "redirect:/";
-    // }
+        return "redirect:/";
+    }
 }

@@ -1,22 +1,28 @@
 package it.matteoavanzini.survey.service;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import it.matteoavanzini.survey.model.Answer;
 import it.matteoavanzini.survey.model.Option;
 import it.matteoavanzini.survey.model.Question;
+import it.matteoavanzini.survey.model.SurveyResult;
 
 @Service
 public class QuestionServiceImpl implements QuestionService {
 
-    private Map<Integer, Question> map;
+    private Map<Integer, Question> survey;
+    private SurveyResult result;
+    private Logger logger = LoggerFactory.getLogger(QuestionServiceImpl.class);
 
     public QuestionServiceImpl() {
-        map = new HashMap<>();
-        map.put(1, getSimpleQuestion());
-        map.put(2, getMultipleQuestion());
+        survey = new LinkedHashMap<>();
+        survey.put(1, getSimpleQuestion());
+        survey.put(2, getMultipleQuestion());
     }
 
     private Question getSimpleQuestion() {
@@ -41,8 +47,33 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    public Question get(int id) {
-        return map.get(id);
+    public Question next(int from) {
+        logger.info("FROM " + from);
+        return survey.get(++from);
+    }
+
+    @Override
+    public void createSurveyResult() {
+        result = new SurveyResult();
+    }
+
+    @Override
+    public void closeSurveyResult() {
+        result.endSurvey();
+    }
+
+    @Override
+    public Question getQuestion(int id) {
+        return survey.get(id);
+    }
+
+    @Override
+    public void addAnswer(Answer answer) {
+        result.addAnswer(answer);
     }
     
+    @Override
+    public SurveyResult getResult() {
+        return result;
+    }
 }

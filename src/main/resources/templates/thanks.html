@@ -1,10 +1,16 @@
 <!DOCTYPE html>
 <head>
     <title>Questions</title>
+    <span th:insert="home :: stylesheet"></span>
 </head>
 <body>
-    <h2>
-        Grazie per aver partecipato
-    </h2>
+    <div class="container">
+        <h2>
+            Grazie per aver partecipato
+        </h2>
+        <hr />
+        <p>Il tuo punteggio è: <span th:text="${result.total}">10</span></p>
+    </div>
+    <span th:insert="home :: footer"></span>
 </body>
 </html>

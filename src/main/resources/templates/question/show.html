@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <head>
     <title>Survey</title>
+    <span th:insert="home :: stylesheet"></span>
 </head>
 <body>
-    <form method="POST" action="/answer/save" th:object="${question}">
+    <div class="container">
+    <form method="POST" th:action="'/answer/' + ${question.id} + '/save'" th:object="${question}">
         <div>
             <h2 th:text="*{title}">Titolo</h2>
             <input type="hidden" name="qid" th:value="*{id}" />
@@ -12,15 +14,16 @@
             <p th:text="*{description}">Titolo</p>
         </div>
         <ul>
-            <li th:each="opt: ${question.options}">
-                <input 
+            <li th:each="option, stat: ${question.options}">
+                <input name="choose"
                     th:type="${question.multiple} ? 'checkbox' : 'radio'" 
-                    name="choose" 
-                    th:value="${opt.value}" />
-                <span th:text="${opt.text}">Testo</span>
+                    th:value="${option.id}" />
+                <span th:text="${option.text}">Testo</span>
             </li>
         </ul>
         <input type="submit" value="Avanti" />
     </form>
+    </div>
+    <span th:insert="home :: footer"></span>
 </body>
 </html>
