@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<head>
+    <title>Survey</title>
+</head>
+<body>
+    <form method="POST" action="/answer/save" th:object="${question}">
+        <div>
+            <h2 th:text="*{title}">Titolo</h2>
+            <input type="hidden" name="qid" th:value="*{id}" />
+        </div>
+        <div>
+            <p th:text="*{description}">Titolo</p>
+        </div>
+        <ul>
+            <li th:each="opt: ${question.options}">
+                <input 
+                    th:type="${question.multiple} ? 'checkbox' : 'radio'" 
+                    name="choose" 
+                    th:value="${opt.value}" />
+                <span th:text="${opt.text}">Testo</span>
+            </li>
+        </ul>
+        <input type="submit" value="Avanti" />
+    </form>
+</body>
+</html>
