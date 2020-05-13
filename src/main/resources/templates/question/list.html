@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<head>
+    <title>Questions</title>
+    <span th:insert="home :: stylesheet"></span>
+</head>
+<body>
+    <div class="container">
+        <a th:href="@{/question/new}">Edit</a>
+        <table class="table table-striped">
+            <tr>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Actions</th>
+            </tr>
+            <tr th:each="question: ${allQuestions}">
+                <td th:text="${question.id}">1</td>
+                <td th:text="${question.title}">Titolo</td>
+                <td>
+                    <a th:href="@{/question/{id}/edit(id=${question.id})}">Edit</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <span th:insert="home :: footer"></span>
+</body>
+</html>

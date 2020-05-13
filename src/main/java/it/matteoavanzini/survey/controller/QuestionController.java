@@ -1,5 +1,7 @@
 package it.matteoavanzini.survey.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import it.matteoavanzini.survey.model.Option;
 import it.matteoavanzini.survey.model.Question;
 import it.matteoavanzini.survey.service.QuestionService;
 
@@ -36,18 +39,36 @@ public class QuestionController {
         return "thanks";
     }
 
-    @GetMapping("/edit")
-    public String edit() {
-        return "question/edit";
-    }   
+    @GetMapping("/new")
+    public String create(Model model) {
+        model.addAttribute("question", new Question());
+        return "question/form";
+    }
+
+    @GetMapping("/list")
+    public String list(Model model) {
+        List<Question> questions = service.getAll();
+        model.addAttribute("allQuestions", questions);
+        return "question/list";
+    }
+
+    @GetMapping("/{id}/edit")
+    public String edit(@PathVariable("id") int id, Model model) {
+        Question question = service.getQuestion(id);
+        model.addAttribute("question", question);
+        return "question/form";
+    }
 
     @PostMapping("/save")
     public String save(@ModelAttribute Question question) {
         logger.info("Question title: " + question.getTitle());
         logger.info("Question description: " + question.getDescription());
 
-        // salvo l'oggetto sul db
+        for (Option o: question.getOptions()) {
+            logger.info("Opt: " + o);
+        }
 
+        service.saveQuestion(question);
         return "redirect:/";
     }
 

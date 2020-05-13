@@ -36,6 +36,7 @@ public class AnswerController {
         if (null != next) {
             return "redirect:/question/" + next.getId() + "/show";
         }
-        return "redirect:/thanks";
+        
+        return "redirect:/survey/thanks";
     }
 }

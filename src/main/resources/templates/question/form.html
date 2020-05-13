@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<head>
+    <title>Questions</title>
+    <span th:insert="home :: stylesheet"></span>
+</head>
+<body>
+    <div class="container">
+    <form method="POST" action="/question/save" th:object="${question}">
+        <div>
+            <label>Titolo</label>
+            <input type="text" name="title" th:value="*{title}" />
+        </div>
+        <div>
+            <label>Descrizione</label>
+            <textarea name="description" cols="10" rows="5" th:text="*{description}"></textarea>
+        </div>
+        <div>
+            <label>Multiple</label>
+            <input type="checkbox" name="multiple" />
+        </div>
+        <div>
+            <div th:each="option, stat: *{options}">
+                <input th:field="*{options[__${stat.index}__].text}" type="text" />
+                <input th:field="*{options[__${stat.index}__].value}" type="number" />
+            </div>
+        </div>
+        <input type="hidden" name="id" th:value="*{id}" />
+        <input type="submit" value="Salva" />
+    </form>
+    </div>
+    <span th:insert="home :: footer"></span>
+</body>
+</html>

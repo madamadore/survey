@@ -15,7 +15,7 @@
         </div>
         <ul>
             <li th:each="option, stat: ${question.options}">
-                <input name="choose"
+                <input name="choose" required
                     th:type="${question.multiple} ? 'checkbox' : 'radio'" 
                     th:value="${option.id}" />
                 <span th:text="${option.text}">Testo</span>
@@ -25,5 +25,23 @@
     </form>
     </div>
     <span th:insert="home :: footer"></span>
+    <script>
+        $(function(){
+
+            var requiredCheckboxes = $(':checkbox[required]');
+
+            requiredCheckboxes.change(function(){
+
+                if(requiredCheckboxes.is(':checked')) {
+                    requiredCheckboxes.removeAttr('required');
+                }
+
+                else {
+                    requiredCheckboxes.attr('required', 'required');
+                }
+            });
+
+            });
+    </script>
 </body>
 </html>

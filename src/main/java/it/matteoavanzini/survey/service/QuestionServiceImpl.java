@@ -1,7 +1,10 @@
 package it.matteoavanzini.survey.service;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,14 +18,14 @@ import it.matteoavanzini.survey.model.SurveyResult;
 @Service
 public class QuestionServiceImpl implements QuestionService {
 
-    private Map<Integer, Question> survey;
+    private Map<Long, Question> survey;
     private SurveyResult result;
     private Logger logger = LoggerFactory.getLogger(QuestionServiceImpl.class);
 
     public QuestionServiceImpl() {
         survey = new LinkedHashMap<>();
-        survey.put(1, getSimpleQuestion());
-        survey.put(2, getMultipleQuestion());
+        survey.put(1L, getSimpleQuestion());
+        survey.put(2L, getMultipleQuestion());
     }
 
     private Question getSimpleQuestion() {
@@ -47,8 +50,7 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    public Question next(int from) {
-        logger.info("FROM " + from);
+    public Question next(long from) {
         return survey.get(++from);
     }
 
@@ -63,7 +65,7 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    public Question getQuestion(int id) {
+    public Question getQuestion(long id) {
         return survey.get(id);
     }
 
@@ -71,9 +73,21 @@ public class QuestionServiceImpl implements QuestionService {
     public void addAnswer(Answer answer) {
         result.addAnswer(answer);
     }
-    
+
     @Override
     public SurveyResult getResult() {
         return result;
+    }
+
+    @Override
+    public void saveQuestion(Question question) {
+        survey.put(question.getId(), question);
+    }
+
+    @Override
+    public List<Question> getAll() {
+        return survey.values()
+            .stream()
+            .collect(Collectors.toCollection(ArrayList::new));
     }
 }
