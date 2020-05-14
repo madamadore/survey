@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import it.matteoavanzini.survey.model.Option;
@@ -21,7 +23,7 @@ import it.matteoavanzini.survey.model.Question;
 import it.matteoavanzini.survey.service.QuestionService;
 
 @Controller
-@RequestMapping("/question")
+@RequestMapping(value = "/question", method = { RequestMethod.GET, RequestMethod.POST })
 public class QuestionController {
 
     Logger logger = LoggerFactory.getLogger(QuestionController.class);
@@ -61,19 +63,12 @@ public class QuestionController {
 
     @PostMapping("/save")
     public String save(@ModelAttribute Question question) {
-        logger.info("Question title: " + question.getTitle());
-        logger.info("Question description: " + question.getDescription());
-
-        for (Option o: question.getOptions()) {
-            logger.info("Opt: " + o);
-        }
-
         service.saveQuestion(question);
-        return "redirect:/";
+        return "redirect:/question/list";
     }
 
     // metodo inutile, solo per esempio
-    public String saveWithParam(@RequestParam String title, @RequestParam String description) {
+    public String saveWithParam(@RequestParam("title") String title, @RequestParam String description) {
         Question q = new Question();
         q.setTitle(title);
         q.setDescription(description);

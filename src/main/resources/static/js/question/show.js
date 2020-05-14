@@ -5,9 +5,7 @@ $(document).ready(function() {
 
         if(requiredCheckboxes.is(':checked')) {
             requiredCheckboxes.removeAttr('required');
-        }
-
-        else {
+        } else {
             requiredCheckboxes.attr('required', 'required');
         }
     });   

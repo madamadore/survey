@@ -9,19 +9,19 @@ import lombok.Setter;
 @Setter
 public class Answer {
     private Question question;
-    private List<Long> choose;
+    private List<Long> choosedId;
     private int total;
 
     public Answer() {}
     public Answer(Question question, List<Long> choose) {
         this.question = question;
-        this.choose = choose;
+        this.choosedId = choose;
     }
 
     public int calculateTotal() {
         int total = 0;
         for (Option o: question.getOptions()) {
-            if (choose.contains(o.getId())) {
+            if (choosedId.contains(o.getId())) {
                 total += o.getValue();
             }
         }
