@@ -6,6 +6,22 @@
     </span>
 </head>
 <body>
+    <nav th:fragment="menu" class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" th:href="@{/}">Home</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+      
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+              <a class="nav-link" th:href="@{/survey/list}">Surveys</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" th:href="@{/question/list}">Questions</a>
+            </li>
+        </div>
+    </nav>
     <div class="container">
         <h2>Benvenuto</h2>
         <a th:href="@{/survey/start}" class="btn btn-primary">Inizia il Test</a>

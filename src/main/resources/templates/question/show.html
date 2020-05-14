@@ -5,6 +5,7 @@
     <link rel="stylesheet" th:href="@{/css/question/show.css}" />
 </head>
 <body>
+    <nav th:insert="home :: menu"></nav>
     <div class="container">
     <form method="POST" th:action="'/answer/' + ${question.id} + '/save'" th:object="${question}">
         <div>

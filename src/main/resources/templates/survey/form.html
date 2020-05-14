@@ -6,7 +6,7 @@
 <body>
     <nav th:insert="home :: menu"></nav>
     <div class="container">
-    <form method="POST" action="/question/save" th:object="${question}">
+    <form method="POST" action="/survey/save" th:object="${survey}">
         <div>
             <label>Titolo</label>
             <input type="text" name="title" th:value="*{title}" />
@@ -15,22 +15,22 @@
             <label>Descrizione</label>
             <textarea name="description" cols="10" rows="5" th:text="*{description}"></textarea>
         </div>
-        <div>
-            <label>Multiple</label>
-            <input type="checkbox" name="multiple" th:checked="*{multiple}" />
-        </div>
-        <div class="options">
-            <div th:each="option, stat: *{options}">
-                <input th:field="*{options[__${stat.index}__].text}" type="text" />
-                <input th:field="*{options[__${stat.index}__].value}" type="number" />
+        
+        
+        <div th:each="question, stat: ${allQuestions}">
+            <div rowspan="2">
+                <input name="questions" th:type="checkbox" th:value="${question.id}" />
+            </div>
+            <div th:text="${question.description}">
+                Titolo
             </div>
         </div>
         <input type="hidden" name="id" th:value="*{id}" />
         <input type="submit" value="Salva" class="btn btn-primary" />
-        <a href="#" class="addOption btn btn-info">Add Option</a>
+        
     </form>
     </div>
     <span th:insert="home :: footer"></span>
-    <script th:src="@{/js/question/form.js}"></script>
+    
 </body>
 </html>

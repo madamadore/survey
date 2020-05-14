@@ -1,5 +1,6 @@
 package it.matteoavanzini.survey.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import lombok.Getter;
@@ -17,6 +18,7 @@ public class Survey {
 
     public Survey() {
         this.id = ++ID;
+        questions = new ArrayList<>();
     }
 
     public Survey(String title) {
@@ -27,5 +29,9 @@ public class Survey {
     public Survey(String title, List<Question> questions) {
         this(title);
         this.questions = questions;
+    }
+
+    public void addQuestion(Question q) {
+        questions.add(q);
     }
 }

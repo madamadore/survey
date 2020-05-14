@@ -5,18 +5,18 @@
 </head>
 <body>
     <div class="container">
-        <a th:href="@{/question/new}" class="btn btn-success">Add</a>
+        <a th:href="@{/survey/new}" class="btn btn-success">Add</a>
         <table class="table table-striped">
             <tr>
                 <th>ID</th>
                 <th>Title</th>
                 <th>Actions</th>
             </tr>
-            <tr th:each="question: ${allQuestions}">
-                <td th:text="${question.id}">1</td>
-                <td th:text="${question.title}">Titolo</td>
+            <tr th:each="survey: ${allSurveys}">
+                <td th:text="${survey.id}">1</td>
+                <td th:text="${survey.title}">Titolo</td>
                 <td>
-                    <a th:href="@{/question/{id}/edit(id=${question.id})}">Edit</a>
+                    <a th:href="@{/survey/{id}/edit(id=${survey.id})}">Edit</a>
                 </td>
             </tr>
         </table>
