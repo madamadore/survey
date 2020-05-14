@@ -8,12 +8,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import it.matteoavanzini.survey.model.Question;
 import it.matteoavanzini.survey.model.SurveyResult;
+import it.matteoavanzini.survey.repository.SurveyRepositoryImpl;
 import it.matteoavanzini.survey.service.QuestionService;
 
 @Controller
 @RequestMapping("/survey")
 public class SurveyController {
     
+    @Autowired
+    SurveyRepositoryImpl surveyRepository;
+
     @Autowired
     QuestionService service;
     

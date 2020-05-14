@@ -4,17 +4,27 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import it.matteoavanzini.survey.model.Survey;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+import it.matteoavanzini.survey.model.Question;
+import it.matteoavanzini.survey.model.Survey;
+import it.matteoavanzini.survey.service.QuestionService;
+
+@Component
 public class SurveyRepositoryImpl {
 
     List<Survey> surveys;
 
+    @Autowired
+    QuestionService service;
+
     public SurveyRepositoryImpl() {
         surveys = new ArrayList<>();
-        surveys.add(new Survey("Animali"));
-        surveys.add(new Survey("Città"));
-        surveys.add(new Survey("Cose"));
+        List<Question> allQuestions = service.getAll();
+        surveys.add(new Survey("Animali", allQuestions));
+        surveys.add(new Survey("Città", allQuestions));
+        surveys.add(new Survey("Cose", allQuestions));
     }
     
     public List<Survey> findAll() {

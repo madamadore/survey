@@ -23,4 +23,9 @@ public class Survey {
         this();
         this.title = title;
     }
+
+    public Survey(String title, List<Question> questions) {
+        this(title);
+        this.questions = questions;
+    }
 }
