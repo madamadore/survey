@@ -47,4 +47,18 @@ public class Option {
     public String toString() {
         return "{ text: " + text + ", value: " + value + " }";
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof Option) {
+            Option other = (Option) o;
+            return other.id == this.id;
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return (int) id;
+    }
 }
