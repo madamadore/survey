@@ -11,7 +11,6 @@ import it.matteoavanzini.survey.model.Question;
 import it.matteoavanzini.survey.model.Survey;
 import it.matteoavanzini.survey.service.QuestionService;
 
-@Repository
 public class SurveyRepositoryImpl {
 
     List<Survey> surveys;

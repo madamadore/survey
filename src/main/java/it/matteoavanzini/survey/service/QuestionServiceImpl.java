@@ -4,49 +4,37 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import it.matteoavanzini.survey.model.Answer;
-import it.matteoavanzini.survey.model.Option;
 import it.matteoavanzini.survey.model.Question;
 import it.matteoavanzini.survey.model.SurveyResult;
+import it.matteoavanzini.survey.repository.QuestionRepository;
 
 @Service
 public class QuestionServiceImpl implements QuestionService {
-
+    
     private Map<Long, Question> survey;
     private SurveyResult result;
     private Logger logger = LoggerFactory.getLogger(QuestionServiceImpl.class);
 
-    public QuestionServiceImpl() {
+    @Autowired
+    public QuestionServiceImpl(QuestionRepository questionRepository) {
+        
+        Optional<Question> simpleQuestion = questionRepository.findById(1L);
+        Optional<Question> multipleQuestion = questionRepository.findById(2L);
+        
         survey = new LinkedHashMap<>();
-        survey.put(1L, getSimpleQuestion());
-        survey.put(2L, getMultipleQuestion());
-    }
-
-    private Question getSimpleQuestion() {
-        Question q = new Question();
-        q.setTitle("Domanda");
-        q.setDescription("di che colore era il cavallo bianco di Napoleone?");
-        q.addOption(new Option("Bianco", 4));
-        q.addOption(new Option("Nero", 0));
-        return q;
-    }
-
-    private Question getMultipleQuestion() {
-        Question q = new Question();
-        q.setTitle("Domanda");
-        q.setDescription("Quali sono i colori sociali del Bologna?");
-        q.setMultiple(true);
-        q.addOption(new Option("Rosso", 2));
-        q.addOption(new Option("Nero", 0));
-        q.addOption(new Option("Giallo", 0));
-        q.addOption(new Option("Blu", 2));
-        return q;
+        if (simpleQuestion.isPresent())
+            survey.put(1L, simpleQuestion.get());
+        if (multipleQuestion.isPresent())
+            survey.put(2L, multipleQuestion.get());
     }
 
     @Override

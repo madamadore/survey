@@ -1,9 +1,12 @@
 package it.matteoavanzini.survey.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class Option {
@@ -12,13 +15,21 @@ public class Option {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
+
+    @Column(length=150)
     private String text;
     private int value;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Question question;
 
     public Option() { this(null, 0); }
     public Option(String text) { this(text, 0); }
     public Option(String text, int value) { 
-        this.id = ++Option.ID;
+        this(++Option.ID, text, value);
+    }
+    public Option(long id, String text, int value) { 
+        this.id = id;
         this.text = text; 
         this.value = value;
     }

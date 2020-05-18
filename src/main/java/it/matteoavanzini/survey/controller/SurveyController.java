@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import it.matteoavanzini.survey.model.Question;
 import it.matteoavanzini.survey.model.Survey;
 import it.matteoavanzini.survey.model.SurveyResult;
-import it.matteoavanzini.survey.repository.SurveyRepositoryImpl;
+import it.matteoavanzini.survey.repository.SurveyRepository;
 import it.matteoavanzini.survey.service.QuestionService;
 
 @Controller
@@ -24,7 +24,7 @@ import it.matteoavanzini.survey.service.QuestionService;
 public class SurveyController {
     
     @Autowired
-    SurveyRepositoryImpl surveyRepository;
+    SurveyRepository surveyRepository;
 
     @Autowired
     QuestionService questionService;
@@ -75,8 +75,8 @@ public class SurveyController {
     }
 
     @GetMapping("/{id:[\\d]+}/edit")
-    public String edit(@PathVariable("id") int id, Model model) {
-        Optional<Survey> question = surveyRepository.findByID(id);
+    public String edit(@PathVariable("id") long id, Model model) {
+        Optional<Survey> question = surveyRepository.findById(id);
         List<Question> allQuestions = questionService.getAll();
 
         model.addAttribute("survey", question.get());
