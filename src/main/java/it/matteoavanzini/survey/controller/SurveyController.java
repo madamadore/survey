@@ -105,7 +105,6 @@ public class SurveyController {
             survey.addQuestion(q);
         }
 
-
         surveyRepository.save(survey);
         return "redirect:/survey/list";
     }

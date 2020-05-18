@@ -1,11 +1,19 @@
 package it.matteoavanzini.survey.model;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
+@Entity
 public class Option {
     public static long ID = 0;
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long id;
     private String text;
     private int value;
-    private long id;
 
     public Option() { this(null, 0); }
     public Option(String text) { this(text, 0); }
