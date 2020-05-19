@@ -1,0 +1,26 @@
+question:
+    title: Controller
+    description: Un controller è un component
+    multiple: false
+    - option:
+        text: vero
+        value: 4
+    - option:
+        text: falso
+        value: 0
+question:
+    title: Spring Boot
+    description: Quale di queste affermazioni è vera?
+    multiple: true
+    - option:
+        text: con Spring Boot si può creare ogni tipo di applicazioni
+        value: 2
+    - option:
+        text: Spring ha bisogno di essere inizializzato con Spring Boot
+        value: 0
+    - option:
+        text: Spring è un framework open-source
+        value: 2
+    - option:
+        text: Spring e Spring Boot sono la stessa cosa
+        value: 0

@@ -42,15 +42,6 @@ public class QuestionRepositoryImpl implements JdbcQuestionRepository {
 
     @Override
     public List<Question> findAll() {
-        // return jdbcTemplate.query(
-        // "select * from question",
-        // (rs, rowNum) -> {
-        // Question q = new Question();
-        // q.setId(rs.getLong("id"));
-        // q.setTitle(rs.getString("title"));
-        // q.setDescription(rs.getString("description"));
-        // return q;
-        // });
         return jdbcTemplate.query("select * from question", new RowMapper<Question>() {
             public Question mapRow(ResultSet rs, int rowNum) {
                     Question q = new Question();

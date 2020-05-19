@@ -12,6 +12,7 @@ public interface QuestionService {
     void createSurveyResult();
     void closeSurveyResult();
 
+    Answer createAnswer(long questionId, List<Long> choosedOptions);    
     void addAnswer(Answer answer);
     SurveyResult getResult();
 
