@@ -38,7 +38,4 @@ public class SurveyResult {
         answers.add(answer);
     }
 
-    public void endSurvey() {
-        
-    }
 }

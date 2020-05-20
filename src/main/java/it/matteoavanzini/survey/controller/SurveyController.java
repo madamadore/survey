@@ -40,12 +40,11 @@ public class SurveyController {
     @GetMapping("/start")
     public String startSurvey() {
         questionService.createSurveyResult();
-
         Question next = questionService.getQuestion(1);
         if (null != next) {
             return "redirect:/question/" + next.getId() + "/show";
         }
-        return "redirect:/";
+        return "redirect:/survey/thanks";
     }
 
 
@@ -59,9 +58,9 @@ public class SurveyController {
         return "thanks";
     }
 
-    @GetMapping("/new")
+    @GetMapping(value="/new")
     public String create(Model model) {
-        List<Question> allQuestions = questionService.getAll();
+        List<Question> allQuestions = questionService.getAllQuestions();
         model.addAttribute("survey", new Survey());
         model.addAttribute("allQuestions", allQuestions);
         return "survey/form";
@@ -77,7 +76,7 @@ public class SurveyController {
     @GetMapping("/{id:[\\d]+}/edit")
     public String edit(@PathVariable("id") long id, Model model) {
         Optional<Survey> question = surveyRepository.findById(id);
-        List<Question> allQuestions = questionService.getAll();
+        List<Question> allQuestions = questionService.getAllQuestions();
 
         model.addAttribute("survey", question.get());
         model.addAttribute("allQuestions", allQuestions);
@@ -99,10 +98,12 @@ public class SurveyController {
         survey.setTitle(title);
         survey.setDescription(description);
 
-        for (String qid : questionsId) {
-            Long lid = Long.parseLong(qid);
-            Question q = questionService.getQuestion(lid);
-            survey.addQuestion(q);
+        if (questionsId != null) {
+            for (String qid : questionsId) {
+                Long lid = Long.parseLong(qid);
+                Question q = questionService.getQuestion(lid);
+                survey.addQuestion(q);
+            }
         }
 
         surveyRepository.save(survey);

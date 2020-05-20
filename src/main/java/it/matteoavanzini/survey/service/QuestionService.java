@@ -11,12 +11,12 @@ public interface QuestionService {
 
     void createSurveyResult();
     void closeSurveyResult();
+    SurveyResult getResult();
 
     Answer createAnswer(long questionId, List<Long> choosedOptions);    
     void addAnswer(Answer answer);
-    SurveyResult getResult();
-
+    
     Question getQuestion(long id);
     void saveQuestion(Question question);
-    List<Question> getAll();
+    List<Question> getAllQuestions();
 }

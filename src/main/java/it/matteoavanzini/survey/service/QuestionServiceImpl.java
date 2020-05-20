@@ -36,6 +36,9 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Autowired
     SurveyResultRepository surveyResultRepository;
+
+    @Autowired
+    QuestionRepository questionRepository;
     
     @Autowired
     public QuestionServiceImpl(QuestionRepository questionRepository) {
@@ -109,7 +112,7 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    public List<Question> getAll() {
+    public List<Question> getAllQuestions() {
         return survey.values()
             .stream()
             .collect(Collectors.toCollection(ArrayList::new));

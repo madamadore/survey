@@ -49,7 +49,7 @@ public class QuestionController {
 
     @GetMapping("/list")
     public String list(Model model) {
-        List<Question> questions = service.getAll();
+        List<Question> questions = service.getAllQuestions();
         model.addAttribute("allQuestions", questions);
         return "question/list";
     }
