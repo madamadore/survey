@@ -19,9 +19,9 @@
         
         <div th:each="question, stat: ${allQuestions}">
             <div rowspan="2">
-                <input name="questions" th:type="checkbox" th:value="${question.id}" />
+                <input name="questions" th:checked="${#lists.contains(survey.questions, question.id)}" type="checkbox" th:value="${question.id}"  />
             </div>
-            <div th:text="${question.description}">
+            <div th:text="${question.title}">
                 Titolo
             </div>
         </div>

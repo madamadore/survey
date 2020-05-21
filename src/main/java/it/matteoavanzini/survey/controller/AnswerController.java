@@ -1,12 +1,13 @@
 package it.matteoavanzini.survey.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -24,19 +25,22 @@ public class AnswerController {
     @Autowired
     QuestionService questionService;
 
-    @PostMapping("/{qid:[\\d]+}/save")
-    public String save(@RequestParam List<Long> choosedOptionsId, 
-                        @PathVariable("qid") int questionId) {
+    @PostMapping("/save")
+    public String save(@RequestParam(name="choose", required=false) List<Long> choosedOptionsId, 
+                        @RequestParam("sid") long surveyId,
+                        @RequestParam("qid") int questionId, Model model) {
 
+        if (null == choosedOptionsId) choosedOptionsId = new ArrayList<>();
         Answer answer = questionService.createAnswer(questionId, choosedOptionsId);
         questionService.addAnswer(answer);
 
-        Question next = questionService.next(questionId);
+        Question next = questionService.next(surveyId, questionId);
         if (null != next) {
-            return "redirect:/question/" + next.getId() + "/show";
+            long qid = next.getId();
+            return "redirect:/survey/" + surveyId + "/question/" + qid + "/show";
         }
         
-        return "redirect:/survey/thanks";
+        return "redirect:/survey/" + surveyId + "/thanks";
     }
 
 }

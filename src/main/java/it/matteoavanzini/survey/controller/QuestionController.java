@@ -1,13 +1,13 @@
 package it.matteoavanzini.survey.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import it.matteoavanzini.survey.model.Option;
 import it.matteoavanzini.survey.model.Question;
 import it.matteoavanzini.survey.service.QuestionService;
 
@@ -30,16 +29,6 @@ public class QuestionController {
     
     @Autowired
     QuestionService service;
-
-    @GetMapping("/{qid:[\\d]+}/show")
-    public String show(Model model, @PathVariable("qid") int questionId) {
-        Question question = service.getQuestion(questionId);
-        if (question != null) {
-            model.addAttribute("question", question);
-            return "question/show";
-        }
-        return "thanks";
-    }
 
     @GetMapping("/new")
     public String create(Model model) {
@@ -55,10 +44,13 @@ public class QuestionController {
     }
 
     @GetMapping("/{id:[\\d]+}/edit")
-    public String edit(@PathVariable("id") int id, Model model) {
-        Question question = service.getQuestion(id);
-        model.addAttribute("question", question);
-        return "question/form";
+    public String edit(@PathVariable("id") long id, Model model) {
+        Optional<Question> question = service.getQuestion(id);
+        if (question.isPresent()) {
+            model.addAttribute("question", question.get());
+            return "question/form";
+        }
+        return "redirect:/question/list";
     }
 
     @PostMapping("/save")

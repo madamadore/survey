@@ -7,13 +7,14 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import it.matteoavanzini.survey.model.Option;
 import it.matteoavanzini.survey.model.Question;
-import it.matteoavanzini.survey.repository.QuestionRepository;
+import it.matteoavanzini.survey.model.Survey;
+import it.matteoavanzini.survey.repository.SurveyRepository;
 
 @SpringBootApplication
 public class SurveyApplication implements CommandLineRunner {
 
 	@Autowired
-	QuestionRepository questionRepository;
+	SurveyRepository surveyRepository;
 	
 	public static void main(String[] args) {
 		SpringApplication.run(SurveyApplication.class, args);
@@ -24,30 +25,31 @@ public class SurveyApplication implements CommandLineRunner {
 		Question simpleQuestion = getSimpleQuestion();
         Question multipleQuestion = getMultipleQuestion();
 
-        questionRepository.save(simpleQuestion);
-        questionRepository.save(multipleQuestion);
+        Survey survey = new Survey("Example");
+        survey.addQuestion(simpleQuestion);
+        survey.addQuestion(multipleQuestion);
+
+        surveyRepository.save(survey);
 	}
 
 	private Question getSimpleQuestion() {
         Question q = new Question();
         q.setTitle("Domanda");
-        q.setId(1L);
         q.setDescription("di che colore era il cavallo bianco di Napoleone?");
-        q.addOption(new Option(5L, "Bianco", 4));
-        q.addOption(new Option(6L, "Nero", 0));
+        q.addOption(new Option("Bianco", 4));
+        q.addOption(new Option("Nero", 0));
         return q;
     }
 
     private Question getMultipleQuestion() {
         Question q = new Question();
         q.setTitle("Domanda");
-        q.setId(2L);
         q.setDescription("Quali sono i colori sociali del Bologna?");
         q.setMultiple(true);
-        q.addOption(new Option(1L, "Rosso", 2));
-        q.addOption(new Option(2L, "Nero", 0));
-        q.addOption(new Option(3L, "Giallo", 0));
-        q.addOption(new Option(4L, "Blu", 2));
+        q.addOption(new Option("Rosso", 2));
+        q.addOption(new Option("Nero", 0));
+        q.addOption(new Option("Giallo", 0));
+        q.addOption(new Option("Blu", 2));
         return q;
     }
 

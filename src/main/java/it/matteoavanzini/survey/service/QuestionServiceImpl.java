@@ -2,32 +2,31 @@ package it.matteoavanzini.survey.service;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.LinkedHashMap;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
-
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import it.matteoavanzini.survey.model.Answer;
 import it.matteoavanzini.survey.model.Option;
 import it.matteoavanzini.survey.model.Question;
+import it.matteoavanzini.survey.model.QuestionSurvey;
+import it.matteoavanzini.survey.model.Survey;
 import it.matteoavanzini.survey.model.SurveyResult;
 import it.matteoavanzini.survey.repository.OptionRepository;
 import it.matteoavanzini.survey.repository.QuestionRepository;
+import it.matteoavanzini.survey.repository.SurveyRepository;
 import it.matteoavanzini.survey.repository.SurveyResultRepository;
 
 @Service
 public class QuestionServiceImpl implements QuestionService {
     
-    private Map<Long, Question> survey;
     private SurveyResult result;
     private Logger logger = LoggerFactory.getLogger(QuestionServiceImpl.class);
 
@@ -39,23 +38,26 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Autowired
     QuestionRepository questionRepository;
-    
+
     @Autowired
-    public QuestionServiceImpl(QuestionRepository questionRepository) {
-        
-        Optional<Question> simpleQuestion = questionRepository.findById(1L);
-        Optional<Question> multipleQuestion = questionRepository.findById(2L);
-        
-        survey = new LinkedHashMap<>();
-        if (simpleQuestion.isPresent())
-            survey.put(1L, simpleQuestion.get());
-        if (multipleQuestion.isPresent())
-            survey.put(2L, multipleQuestion.get());
-    }
+    SurveyRepository surveyRepository;
 
     @Override
-    public Question next(long from) {
-        return survey.get(++from);
+    public Question next(long surveyId, long fromQuestionId) {
+        Optional<Survey> survey = surveyRepository.findById(surveyId);
+        if (survey.isPresent()) {
+            Survey currentSurvey = survey.get();
+            List<QuestionSurvey> questionServices = currentSurvey.getQuestions();
+            Iterator<QuestionSurvey> iterator = questionServices.iterator();
+            while (iterator.hasNext()) {
+                Question q = iterator.next().getQuestion();
+                if (q.getId() == fromQuestionId) {
+                    if (!iterator.hasNext()) break;
+                    return iterator.next().getQuestion();
+                }
+            }
+        }
+        return null;
     }
 
     @Override
@@ -90,8 +92,8 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    public Question getQuestion(long id) {
-        return survey.get(id);
+    public Optional<Question> getQuestion(long id) {
+        return questionRepository.findById(id);
     }
 
     @Override
@@ -108,19 +110,17 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     public void saveQuestion(Question question) {
-        survey.put(question.getId(), question);
+        questionRepository.save(question);
     }
 
     @Override
     public List<Question> getAllQuestions() {
-        return survey.values()
-            .stream()
-            .collect(Collectors.toCollection(ArrayList::new));
+        return questionRepository.findAll();
     }
 
     @Override
     public Answer createAnswer(long questionId, List<Long> choosedOptions) {
-        Question question = getQuestion(questionId);
+        Optional<Question> question = getQuestion(questionId);
         List<Option> options = new ArrayList<>();
         for (Long l: choosedOptions) {
             Optional<Option> mayOption = optionRepository.findById(l);
@@ -128,6 +128,6 @@ public class QuestionServiceImpl implements QuestionService {
                 options.add(mayOption.get());
             }
         }
-        return new Answer(question, options);
+        return new Answer(question.get(), options);
     }
 }

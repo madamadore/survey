@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<head>
+    <title>Oooops!!</title>
+    <span th:insert="home :: stylesheet"></span>
+</head>
+<body>
+    
+    <div class="container text-center">
+        <a th:href="@{/home}">
+            <img th:src="@{/images/404.jpg}" />
+        </a>
+        <hr />
+        <p>Non c'è niente qui.<br /> <a th:href="@{/home}">Torniamo a casa</a></p>
+    </div>
+    <span th:insert="home :: footer"></span>
+</body>
+</html>

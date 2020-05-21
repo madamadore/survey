@@ -10,7 +10,6 @@ import javax.persistence.ManyToOne;
 
 @Entity
 public class Option {
-    public static long ID = 0;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -20,14 +19,13 @@ public class Option {
     private String text;
     private int value;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    private Question question;
-
     public Option() { this(null, 0); }
     public Option(String text) { this(text, 0); }
     public Option(String text, int value) { 
-        this(++Option.ID, text, value);
+        this.text = text; 
+        this.value = value;
     }
+    
     public Option(long id, String text, int value) { 
         this.id = id;
         this.text = text; 
