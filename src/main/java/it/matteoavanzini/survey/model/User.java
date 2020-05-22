@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -24,10 +25,12 @@ import lombok.Setter;
 @Getter
 @Setter
 public class User implements UserDetails {
+    
     @Id    
     @GeneratedValue(strategy = GenerationType.AUTO)    
     private long id;
     
+    @Column(unique = true)
     private String username;
     private String password;
 

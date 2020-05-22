@@ -28,7 +28,7 @@ public class AdminSurveyController {
     @Autowired
     QuestionService questionService;
     
-    @GetMapping(value="/new")
+    @GetMapping("/new")
     public String create(Model model) {
         List<Question> allQuestions = questionService.getAllQuestions();
         model.addAttribute("survey", new Survey());
@@ -79,6 +79,6 @@ public class AdminSurveyController {
         }
 
         surveyRepository.save(survey);
-        return "redirect:/survey/list";
+        return "redirect:/admin/survey/list";
     }
 }

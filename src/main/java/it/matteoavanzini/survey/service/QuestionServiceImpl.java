@@ -27,8 +27,6 @@ import it.matteoavanzini.survey.repository.SurveyResultRepository;
 
 @Service
 public class QuestionServiceImpl implements QuestionService {
-    
-    private Map<User, SurveyResult> result;
 
     @Autowired
     OptionRepository optionRepository;
@@ -60,14 +58,25 @@ public class QuestionServiceImpl implements QuestionService {
         return null;
     }
 
-    public QuestionServiceImpl() {
-        result = new HashMap<>();
-    }
-
     @Override
     public void createSurveyResult(User user) {
         SurveyResult r = new SurveyResult();
-        result.put(user, r);
+        r.setUser(user);
+        surveyResultRepository.save(r);
+    }
+
+    @Override
+    @Transactional(propagation=Propagation.REQUIRED)
+    public void addAnswer(User user, Answer answer) {
+        SurveyResult r = getResult(user);
+        r.addAnswer(answer);
+        surveyResultRepository.save(r);
+    }
+
+    @Override
+    public SurveyResult getResult(User user) {
+        Optional<SurveyResult> opt = surveyResultRepository.findByUser(user);
+        return opt.isPresent() ? opt.get() : null;
     }
 
     @Override
@@ -100,19 +109,6 @@ public class QuestionServiceImpl implements QuestionService {
     @Override
     public Optional<Question> getQuestion(long id) {
         return questionRepository.findById(id);
-    }
-
-    @Override
-    @Transactional(propagation=Propagation.REQUIRED)
-    public void addAnswer(User user, Answer answer) {
-        SurveyResult r = getResult(user);
-        r.addAnswer(answer);
-        surveyResultRepository.save(r);
-    }
-
-    @Override
-    public SurveyResult getResult(User user) {
-        return result.get(user);
     }
 
     @Override

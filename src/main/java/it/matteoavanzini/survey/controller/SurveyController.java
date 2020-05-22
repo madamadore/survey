@@ -64,14 +64,16 @@ public class SurveyController {
     }
 
     @GetMapping("/{sid:[\\d]+}/start")
-    public String startSurvey(HttpSession session, @PathVariable("sid") long surveyId, Principal principal, Model model) {
+    public String startSurvey(HttpSession session, 
+                                @PathVariable("sid") long surveyId, 
+                                Principal principal, Model model) {
         Optional<User> user = userRepository.findByUsername(principal.getName());
         questionService.createSurveyResult(user.get());
         session.setAttribute("surveyId", surveyId);
         Optional<Question> next = questionService.getQuestion(1);
         if (next.isPresent()) {
             long qid = next.get().getId();
-            return "forward:/survey/" + surveyId +"/question/" + qid + "/show";
+            return "redirect:/survey/" + surveyId +"/question/" + qid + "/show";
         }
         return "redirect:/survey/" + surveyId +"/thanks";
     }

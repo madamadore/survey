@@ -4,10 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import it.matteoavanzini.survey.config.SpringSurvey;
 import it.matteoavanzini.survey.model.Option;
 import it.matteoavanzini.survey.model.Question;
 import it.matteoavanzini.survey.model.Survey;
@@ -16,7 +14,6 @@ import it.matteoavanzini.survey.repository.SurveyRepository;
 import it.matteoavanzini.survey.repository.UserRepository;
 
 @SpringBootApplication
-@EnableConfigurationProperties(SpringSurvey.class)
 public class SurveyApplication implements CommandLineRunner {
 
 	@Autowired

@@ -50,13 +50,13 @@ public class QuestionController {
             model.addAttribute("question", question.get());
             return "question/form";
         }
-        return "redirect:/question/list";
+        return "redirect:/admin/question/list";
     }
 
     @PostMapping("/save")
     public String save(@ModelAttribute Question question) {
         service.saveQuestion(question);
-        return "redirect:/question/list";
+        return "redirect:/admin/question/list";
     }
 
     // metodo inutile, solo per esempio
