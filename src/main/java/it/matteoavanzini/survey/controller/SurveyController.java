@@ -1,9 +1,11 @@
 package it.matteoavanzini.survey.controller;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
-import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import javax.xml.ws.http.HTTPException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,7 +19,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import it.matteoavanzini.survey.model.Question;
 import it.matteoavanzini.survey.model.Survey;
 import it.matteoavanzini.survey.model.SurveyResult;
+import it.matteoavanzini.survey.model.User;
 import it.matteoavanzini.survey.repository.SurveyRepository;
+import it.matteoavanzini.survey.repository.UserRepository;
 import it.matteoavanzini.survey.service.QuestionService;
 
 @Controller
@@ -29,11 +33,15 @@ public class SurveyController {
 
     @Autowired
     QuestionService questionService;
+
+    @Autowired
+    UserRepository userRepository;
     
     @RequestMapping("/{sid:[\\d]+}/thanks")
-    public String thanks(Model model, @PathVariable("sid") long surveyId) {
-        questionService.closeSurveyResult();
-        SurveyResult result = questionService.getResult();
+    public String thanks(Principal principal, Model model, @PathVariable("sid") long surveyId) {
+        Optional<User> user = userRepository.findByUsername(principal.getName());
+        questionService.closeSurveyResult(user.get());
+        SurveyResult result = questionService.getResult(user.get());
         model.addAttribute("result", result);
         return "thanks";
     }
@@ -42,8 +50,7 @@ public class SurveyController {
     public String startSurvey(Model model) {
         List<Survey> surveys = surveyRepository.findAll();
         if (surveys.size() == 0) {
-            // TODO: solleva un eccezione
-            return "redirect:/";
+            throw new IllegalArgumentException("There is no Surveys");
         } else if (surveys.size() > 1) {
             model.addAttribute("surveys", surveys);
             return "survey/start";
@@ -57,20 +64,28 @@ public class SurveyController {
     }
 
     @GetMapping("/{sid:[\\d]+}/start")
-    public String startSurvey(@PathVariable("sid") long surveyId, Model model) {
-        questionService.createSurveyResult();
+    public String startSurvey(HttpSession session, 
+                                @PathVariable("sid") long surveyId, 
+                                Principal principal, Model model) {
+        Optional<User> user = userRepository.findByUsername(principal.getName());
+        questionService.createSurveyResult(user.get());
+        session.setAttribute("surveyId", surveyId);
         Optional<Question> next = questionService.getQuestion(1);
         if (next.isPresent()) {
             long qid = next.get().getId();
-            return "forward:/survey/" + surveyId +"/question/" + qid + "/show";
+            return "redirect:/survey/" + surveyId +"/question/" + qid + "/show";
         }
         return "redirect:/survey/" + surveyId +"/thanks";
     }
 
     @GetMapping("/{sid:[\\d]+}/question/{qid:[\\d]+}/show")
-    public String show(Model model, 
+    public String show(HttpSession session, Model model, 
                         @PathVariable("sid") long surveyId,
                         @PathVariable("qid") long questionId) {
+        Long sessionSurveyId = (Long) session.getAttribute("surveyId");
+        if (sessionSurveyId.longValue() != surveyId) {
+            throw new HTTPException(400);
+        }
         Optional<Question> question = questionService.getQuestion(questionId);
         if (question.isPresent()) {
             model.addAttribute("question", question.get());
@@ -80,57 +95,4 @@ public class SurveyController {
         return "redirect:/"+surveyId+"/thanks";
     }
 
-    @GetMapping(value="/new")
-    public String create(Model model) {
-        List<Question> allQuestions = questionService.getAllQuestions();
-        model.addAttribute("survey", new Survey());
-        model.addAttribute("allQuestions", allQuestions);
-        return "survey/form";
-    }
-
-    @GetMapping("/list")
-    public String list(Model model) {
-        List<Survey> surveys = surveyRepository.findAll();
-        model.addAttribute("allSurveys", surveys);
-        return "survey/list";
-    }
-
-    @GetMapping("/{id:[\\d]+}/edit")
-    public String edit(@PathVariable("id") long id, Model model) {
-        Optional<Survey> question = surveyRepository.findById(id);
-        List<Question> allQuestions = questionService.getAllQuestions();
-
-        model.addAttribute("survey", question.get());
-        model.addAttribute("allQuestions", allQuestions);
-
-        return "survey/form";
-    }
-
-    @PostMapping("/save")
-    public String save(HttpServletRequest request) {
-        
-        String title = request.getParameter("title");
-        String description = request.getParameter("description");
-        long id = Long.parseLong(request.getParameter("id"));
-
-        String[] questionsId = request.getParameterValues("questions");
-
-        Survey survey = new Survey();
-        survey.setId(id);
-        survey.setTitle(title);
-        survey.setDescription(description);
-
-        if (questionsId != null) {
-            for (String qid : questionsId) {
-                Long lid = Long.parseLong(qid);
-                Optional<Question> q = questionService.getQuestion(lid);
-                if (q.isPresent()) {
-                    survey.addQuestion(q.get());
-                }
-            }
-        }
-
-        surveyRepository.save(survey);
-        return "redirect:/survey/list";
-    }
 }

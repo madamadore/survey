@@ -10,10 +10,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
@@ -27,6 +26,9 @@ public class SurveyResult {
     
     private Date startDate;
     private Date endDate;
+
+    @OneToOne
+    User user;
 
     @OneToMany(cascade = CascadeType.ALL)
     private List<Answer> answers;

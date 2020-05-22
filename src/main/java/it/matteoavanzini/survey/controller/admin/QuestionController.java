@@ -1,4 +1,4 @@
-package it.matteoavanzini.survey.controller;
+package it.matteoavanzini.survey.controller.admin;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,7 +22,7 @@ import it.matteoavanzini.survey.model.Question;
 import it.matteoavanzini.survey.service.QuestionService;
 
 @Controller
-@RequestMapping(value = "/question", method = { RequestMethod.GET, RequestMethod.POST })
+@RequestMapping(value = "/admin/question", method = { RequestMethod.GET, RequestMethod.POST })
 public class QuestionController {
 
     Logger logger = LoggerFactory.getLogger(QuestionController.class);
@@ -50,13 +50,13 @@ public class QuestionController {
             model.addAttribute("question", question.get());
             return "question/form";
         }
-        return "redirect:/question/list";
+        return "redirect:/admin/question/list";
     }
 
     @PostMapping("/save")
     public String save(@ModelAttribute Question question) {
         service.saveQuestion(question);
-        return "redirect:/question/list";
+        return "redirect:/admin/question/list";
     }
 
     // metodo inutile, solo per esempio

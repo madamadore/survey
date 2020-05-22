@@ -6,16 +6,18 @@ import java.util.Optional;
 import it.matteoavanzini.survey.model.Answer;
 import it.matteoavanzini.survey.model.Question;
 import it.matteoavanzini.survey.model.SurveyResult;
+import it.matteoavanzini.survey.model.User;
 
 public interface QuestionService {
     Question next(long serviceId, long fromQuestionId);
 
-    void createSurveyResult();
-    void closeSurveyResult();
-    SurveyResult getResult();
+    void addAnswer(User user, Answer answer);
+    void createSurveyResult(User user);
+    void closeSurveyResult(User user);
+    SurveyResult getResult(User user);
+    
 
     Answer createAnswer(long questionId, List<Long> choosedOptions);    
-    void addAnswer(Answer answer);
     
     Optional<Question> getQuestion(long id);
     void saveQuestion(Question question);

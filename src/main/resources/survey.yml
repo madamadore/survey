@@ -1,4 +1,6 @@
-question:
+title: "Spring Boot"
+description: "Test"
+- question:
     title: Controller
     description: Un controller è un component
     multiple: false
@@ -8,7 +10,7 @@ question:
     - option:
         text: falso
         value: 0
-question:
+- question:
     title: Spring Boot
     description: Quale di queste affermazioni è vera?
     multiple: true

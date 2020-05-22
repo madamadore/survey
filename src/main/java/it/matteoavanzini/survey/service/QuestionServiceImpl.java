@@ -2,12 +2,12 @@ package it.matteoavanzini.survey.service;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -19,6 +19,7 @@ import it.matteoavanzini.survey.model.Question;
 import it.matteoavanzini.survey.model.QuestionSurvey;
 import it.matteoavanzini.survey.model.Survey;
 import it.matteoavanzini.survey.model.SurveyResult;
+import it.matteoavanzini.survey.model.User;
 import it.matteoavanzini.survey.repository.OptionRepository;
 import it.matteoavanzini.survey.repository.QuestionRepository;
 import it.matteoavanzini.survey.repository.SurveyRepository;
@@ -26,9 +27,6 @@ import it.matteoavanzini.survey.repository.SurveyResultRepository;
 
 @Service
 public class QuestionServiceImpl implements QuestionService {
-    
-    private SurveyResult result;
-    private Logger logger = LoggerFactory.getLogger(QuestionServiceImpl.class);
 
     @Autowired
     OptionRepository optionRepository;
@@ -61,23 +59,40 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    public void createSurveyResult() {
-        result = new SurveyResult();
+    public void createSurveyResult(User user) {
+        SurveyResult r = new SurveyResult();
+        r.setUser(user);
+        surveyResultRepository.save(r);
+    }
+
+    @Override
+    @Transactional(propagation=Propagation.REQUIRED)
+    public void addAnswer(User user, Answer answer) {
+        SurveyResult r = getResult(user);
+        r.addAnswer(answer);
+        surveyResultRepository.save(r);
+    }
+
+    @Override
+    public SurveyResult getResult(User user) {
+        Optional<SurveyResult> opt = surveyResultRepository.findByUser(user);
+        return opt.isPresent() ? opt.get() : null;
     }
 
     @Override
     @Transactional(propagation=Propagation.REQUIRES_NEW)
-    public void closeSurveyResult() {
+    public void closeSurveyResult(User user) {
+        SurveyResult r = getResult(user);
         Date endDate = new Date();
         int total = 0;
-        for (Answer a: result.getAnswers()) {
+        for (Answer a: r.getAnswers()) {
             total += calculateTotal(a);
         }
 
-        result.setEndDate(endDate);
-        result.setTotal(total);
+        r.setEndDate(endDate);
+        r.setTotal(total);
 
-        surveyResultRepository.save(result);
+        surveyResultRepository.save(r);
     }
 
     @Transactional(propagation=Propagation.SUPPORTS)
@@ -94,18 +109,6 @@ public class QuestionServiceImpl implements QuestionService {
     @Override
     public Optional<Question> getQuestion(long id) {
         return questionRepository.findById(id);
-    }
-
-    @Override
-    @Transactional(propagation=Propagation.REQUIRED)
-    public void addAnswer(Answer answer) {
-        result.addAnswer(answer);
-        surveyResultRepository.save(result);
-    }
-
-    @Override
-    public SurveyResult getResult() {
-        return result;
     }
 
     @Override
