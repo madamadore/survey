@@ -9,7 +9,7 @@
         <h3>Choose your survey</h3>
         <form method="POST" th:action="@{/survey/start}">
             <ul th:each="survey: ${surveys}">
-                <li><input type="checkbox" name="sid" th:value="${survey.id}" /><span th:text="${survey.title}"></span></li>
+                <li><input type="radio" name="sid" th:value="${survey.id}" /><span th:text="${survey.title}"></span></li>
             </ul>
             <input type="submit" value="Inizia" />
         </form>

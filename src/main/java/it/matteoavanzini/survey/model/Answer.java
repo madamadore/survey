@@ -27,6 +27,7 @@ public class Answer {
 
     @OneToOne
     private Question question;
+    
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name="answer_option", 
         joinColumns=@JoinColumn(name="answer", referencedColumnName="id"),
