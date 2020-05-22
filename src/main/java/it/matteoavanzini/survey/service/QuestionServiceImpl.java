@@ -2,8 +2,10 @@ package it.matteoavanzini.survey.service;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -19,6 +21,7 @@ import it.matteoavanzini.survey.model.Question;
 import it.matteoavanzini.survey.model.QuestionSurvey;
 import it.matteoavanzini.survey.model.Survey;
 import it.matteoavanzini.survey.model.SurveyResult;
+import it.matteoavanzini.survey.model.User;
 import it.matteoavanzini.survey.repository.OptionRepository;
 import it.matteoavanzini.survey.repository.QuestionRepository;
 import it.matteoavanzini.survey.repository.SurveyRepository;
@@ -27,7 +30,7 @@ import it.matteoavanzini.survey.repository.SurveyResultRepository;
 @Service
 public class QuestionServiceImpl implements QuestionService {
     
-    private SurveyResult result;
+    private Map<User, SurveyResult> result;
     private Logger logger = LoggerFactory.getLogger(QuestionServiceImpl.class);
 
     @Autowired
@@ -60,24 +63,30 @@ public class QuestionServiceImpl implements QuestionService {
         return null;
     }
 
+    public QuestionServiceImpl() {
+        result = new HashMap<>();
+    }
+
     @Override
-    public void createSurveyResult() {
-        result = new SurveyResult();
+    public void createSurveyResult(User user) {
+        SurveyResult r = new SurveyResult();
+        result.put(user, r);
     }
 
     @Override
     @Transactional(propagation=Propagation.REQUIRES_NEW)
-    public void closeSurveyResult() {
+    public void closeSurveyResult(User user) {
+        SurveyResult r = getResult(user);
         Date endDate = new Date();
         int total = 0;
-        for (Answer a: result.getAnswers()) {
+        for (Answer a: r.getAnswers()) {
             total += calculateTotal(a);
         }
 
-        result.setEndDate(endDate);
-        result.setTotal(total);
+        r.setEndDate(endDate);
+        r.setTotal(total);
 
-        surveyResultRepository.save(result);
+        surveyResultRepository.save(r);
     }
 
     @Transactional(propagation=Propagation.SUPPORTS)
@@ -98,14 +107,15 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     @Transactional(propagation=Propagation.REQUIRED)
-    public void addAnswer(Answer answer) {
-        result.addAnswer(answer);
-        surveyResultRepository.save(result);
+    public void addAnswer(User user, Answer answer) {
+        SurveyResult r = getResult(user);
+        r.addAnswer(answer);
+        surveyResultRepository.save(r);
     }
 
     @Override
-    public SurveyResult getResult() {
-        return result;
+    public SurveyResult getResult(User user) {
+        return result.get(user);
     }
 
     @Override
