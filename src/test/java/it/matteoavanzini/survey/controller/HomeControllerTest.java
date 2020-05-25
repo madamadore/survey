@@ -47,10 +47,9 @@ public class HomeControllerTest {
 
     @Test
     public void testRouteHome() throws Exception {
-        MvcResult response = mvc.perform(get("/home"))
+       mvc.perform(get("/home"))
             .andExpect(status().isOk())
-            .andExpect(content().string(containsString("Benvenuto")))
-            .andReturn();
+            .andExpect(content().string(containsString("Benvenuto")));
     }
 
 }

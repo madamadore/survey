@@ -76,8 +76,7 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     public SurveyResult getResult(User user, Survey survey) {
-        // TODO: metodo!!
-        Optional<SurveyResult> opt = surveyResultRepository.findByUser(user);
+        Optional<SurveyResult> opt = surveyResultRepository.findByUserAndSurvey(user, survey);
         return opt.isPresent() ? opt.get() : null;
     }
 

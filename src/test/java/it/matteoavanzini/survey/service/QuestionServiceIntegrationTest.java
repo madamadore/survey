@@ -1,7 +1,5 @@
 package it.matteoavanzini.survey.service;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -13,9 +11,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Bean;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import it.matteoavanzini.survey.model.Option;
@@ -23,37 +19,25 @@ import it.matteoavanzini.survey.model.Question;
 import it.matteoavanzini.survey.model.Survey;
 import it.matteoavanzini.survey.model.SurveyResult;
 import it.matteoavanzini.survey.model.User;
-import it.matteoavanzini.survey.repository.OptionRepository;
-import it.matteoavanzini.survey.repository.QuestionRepository;
 import it.matteoavanzini.survey.repository.SurveyRepository;
 import it.matteoavanzini.survey.repository.SurveyResultRepository;
+import it.matteoavanzini.survey.repository.UserRepository;
 
 @RunWith(SpringRunner.class)
-public class QuestionServiceTest {
+@SpringBootTest
+public class QuestionServiceIntegrationTest {
     
-    @TestConfiguration
-    static class QuestionServiceTestContextConfiguration {
-  
-        @MockBean
-        OptionRepository optionRepository;
-
-        @MockBean
-        SurveyResultRepository surveyResultRepository;
-
-        @MockBean
-        QuestionRepository questionRepository;
-
-        @Bean
-        public QuestionService questionService() {
-            return new QuestionServiceImpl();
-        }
-    }
-
     @Autowired
     QuestionService questionService;
 
-    @MockBean
+    @Autowired
     SurveyRepository surveyRepository;
+
+    @Autowired
+    UserRepository userRepository;
+
+    @Autowired
+    SurveyResultRepository surveyResultRepository;
 
     Question expectedSecondQuestion;
     User user;
@@ -62,7 +46,6 @@ public class QuestionServiceTest {
     private Question getFirstSampleQuestion() {
         Question q = new Question();
         q.setTitle("Matematica");
-        q.setId(1L);
         q.setDescription("Quanto fa 2^2?");
         q.addOption(new Option("22", 0));
         q.addOption(new Option("4", 4));
@@ -74,7 +57,6 @@ public class QuestionServiceTest {
     private Question getSecondSampleQuestion() {
         Question q = new Question();
         q.setTitle("Cultura");
-        q.setId(2L);
         q.setDescription("Chi ha scoperto la Pennicilina?");
         q.addOption(new Option("Einstein", 0));
         q.addOption(new Option("Flaming", 4));
@@ -85,35 +67,26 @@ public class QuestionServiceTest {
 
     @Before
     public void setUp() {
-        expectedSecondQuestion = getSecondSampleQuestion();
         survey = new Survey();
         survey.setTitle("Sample test");
         survey.addQuestion(getFirstSampleQuestion());
-        survey.addQuestion(expectedSecondQuestion);
+        survey.addQuestion(getSecondSampleQuestion());
+        surveyRepository.save(survey);
 
         user = new User();
         user.setUsername("adminTest");
+        userRepository.save(user);
 
-        Optional<Survey> optional = Optional.of(survey);
-        Mockito
-            .when(surveyRepository.findById(1L))
-            .thenReturn(optional);
-    }
-
-    @Test
-    public void testNext() {
-        Question question = questionService.next(1L, 1L);
-        assertEquals(expectedSecondQuestion, question);
-    }
-
-    @Test
-    public void testNextOnLastQuestion() {
-        Question question = questionService.next(1L, 2L);
-        assertNull(question);
     }
     
     @Test
     public void testGetResult() {
+
+        SurveyResult surveyResult = new SurveyResult();
+        surveyResult.setUser(user);
+        surveyResult.setSurvey(survey);
+        surveyResultRepository.save(surveyResult);
+
         SurveyResult result = questionService.getResult(user, survey);
         assertNotNull(result);
     }
@@ -121,30 +94,31 @@ public class QuestionServiceTest {
     @Test
     public void testCreateSurveyResult() {
         questionService.createSurveyResult(user, survey);
-        
+
         SurveyResult result = questionService.getResult(user, survey);
         assertNotNull(result);
         assertNotNull(result.getStartDate());
         assertNotNull(result.getSurvey());
         assertNotNull(result.getUser());
     }
-
+    
     // voglio verificare che mi restituisca sempre lo stesso SurveyResult anche in caso di duplicazione
     public void testCreateDuplicatedSurveyResult() {
         
     }
     
     @Test
-    public void testCloseSurveyResult() {
-        testCreateSurveyResult();
+    public void testCloseSurveyResult() throws InterruptedException {
+        questionService.createSurveyResult(user, survey);
 
+        Thread.sleep(1000);
+        
         questionService.closeSurveyResult(user, survey);
         SurveyResult result = questionService.getResult(user, survey);
         assertNotNull(result.getEndDate());
 
         Date startDate = result.getStartDate();
         Date endDate = result.getEndDate();
-        //assertThat(startDate.before(endDate), is(true)); 
         assertTrue(startDate.before(endDate)); 
     }
     
