@@ -51,25 +51,6 @@ public class QuestionServiceTest {
 
     Question expectedSecondQuestion;
 
-    @Before
-    public void setUp() {
-        expectedSecondQuestion = getSecondSampleQuestion();
-        Survey survey = new Survey();
-        survey.setTitle("Sample test");
-        survey.addQuestion(getFirstSampleQuestion());
-        survey.addQuestion(expectedSecondQuestion);
-        Optional<Survey> optional = Optional.of(survey);
-        Mockito
-            .when(surveyRepository.findById(1L))
-            .thenReturn(optional);
-    }
-
-    @Test
-    public void testNext() {
-        Question question = questionService.next(1L, 1L);
-        assertEquals(expectedSecondQuestion, question);
-    }
-
     private Question getFirstSampleQuestion() {
         Question q = new Question();
         q.setTitle("Matematica");
@@ -93,4 +74,30 @@ public class QuestionServiceTest {
         q.addOption(new Option("Churcill", 0));
         return q;
     }
+
+    @Before
+    public void setUp() {
+        expectedSecondQuestion = getSecondSampleQuestion();
+        Survey survey = new Survey();
+        survey.setTitle("Sample test");
+        survey.addQuestion(getFirstSampleQuestion());
+        survey.addQuestion(expectedSecondQuestion);
+
+        Optional<Survey> optional = Optional.of(survey);
+        Mockito
+            .when(surveyRepository.findById(1L))
+            .thenReturn(optional);
+    }
+
+    @Test
+    public void testNext() {
+        Question question = questionService.next(1L, 1L);
+        assertEquals(expectedSecondQuestion, question);
+    }
+
+    public void testNextOnLastQuestion() {}
+    public void testCreateSurveyResult() {}
+    public void testCreateDuplicatedSurveyResult() {}
+    public void testCloseSurveyResult() {}
+    
 }

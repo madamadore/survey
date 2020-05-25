@@ -12,6 +12,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import it.matteoavanzini.survey.model.Survey;
@@ -39,8 +40,8 @@ public class SurveyRepositoryTest {
     @Test
     public void findSurveyWithTitle() {
         Optional<Survey> found = surveyRepository.findByTitle("Test Survey");
-        assertTrue(found.isPresent());
-        assertEquals("description", found.get().getDescription());
+        assertTrue(found.isPresent(), "Nessun Survey");
+        assertEquals("description", found.get().getDescription(), "La description dell'oggetto non è coerente");
     }
 
 }

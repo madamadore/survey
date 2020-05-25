@@ -59,30 +59,32 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    public void createSurveyResult(User user) {
+    public void createSurveyResult(User user, Survey survey) {
         SurveyResult r = new SurveyResult();
         r.setUser(user);
+        r.setSurvey(survey);
         surveyResultRepository.save(r);
     }
 
     @Override
     @Transactional(propagation=Propagation.REQUIRED)
-    public void addAnswer(User user, Answer answer) {
-        SurveyResult r = getResult(user);
+    public void addAnswer(User user, Answer answer, Survey survey) {
+        SurveyResult r = getResult(user, survey);
         r.addAnswer(answer);
         surveyResultRepository.save(r);
     }
 
     @Override
-    public SurveyResult getResult(User user) {
+    public SurveyResult getResult(User user, Survey survey) {
+        // TODO: metodo!!
         Optional<SurveyResult> opt = surveyResultRepository.findByUser(user);
         return opt.isPresent() ? opt.get() : null;
     }
 
     @Override
     @Transactional(propagation=Propagation.REQUIRES_NEW)
-    public void closeSurveyResult(User user) {
-        SurveyResult r = getResult(user);
+    public void closeSurveyResult(User user, Survey survey) {
+        SurveyResult r = getResult(user, survey);
         Date endDate = new Date();
         int total = 0;
         for (Answer a: r.getAnswers()) {

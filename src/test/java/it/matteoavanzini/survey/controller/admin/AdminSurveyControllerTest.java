@@ -1,11 +1,10 @@
 package it.matteoavanzini.survey.controller.admin;
 
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,11 +28,11 @@ public class AdminSurveyControllerTest {
     @Test
     public void testSaveSurvey() throws Exception {
         RequestBuilder req = post("/admin/survey/save")
-                            .param("title", "Test")
-                            .param("id", "1")
-                            .param("description", "Lore Ipsum ...")
-                            .param("question[]", "1L")
-                            .param("question[]", "2L")
+                             .param("title", "Test")
+                             .param("id", "1")
+                             .param("description", "Lore Ipsum ...")
+                             .param("question[]", "1L")
+                             .param("question[]", "2L")
                             // .with(user("admin")
                             //         .password("admin")
                             //         .roles("ADMIN"))

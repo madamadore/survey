@@ -21,6 +21,7 @@ import it.matteoavanzini.survey.model.User;
 @RunWith(SpringRunner.class)
 @DataJpaTest
 public class SurveyResultRepositoryTest {
+    
     @Autowired
     private TestEntityManager entityManager;
  
@@ -53,4 +54,5 @@ public class SurveyResultRepositoryTest {
         assertEquals("adminTest", found.get().getUser().getUsername());
     }
 
+    public void testFindSurveyResultByUserAndSurvey() {}
 }

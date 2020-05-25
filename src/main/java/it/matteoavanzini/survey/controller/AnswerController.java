@@ -16,7 +16,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import it.matteoavanzini.survey.model.Answer;
 import it.matteoavanzini.survey.model.Question;
+import it.matteoavanzini.survey.model.Survey;
 import it.matteoavanzini.survey.model.User;
+import it.matteoavanzini.survey.repository.SurveyRepository;
 import it.matteoavanzini.survey.repository.UserRepository;
 import it.matteoavanzini.survey.service.QuestionService;
 
@@ -32,6 +34,9 @@ public class AnswerController {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    SurveyRepository surveyRepository;
+
     @PostMapping("/save")
     public String save(@RequestParam(name="choose", required=false) List<Long> choosedOptionsId, 
                         @RequestParam("sid") long surveyId,
@@ -40,7 +45,9 @@ public class AnswerController {
         if (null == choosedOptionsId) choosedOptionsId = new ArrayList<>();
         Answer answer = questionService.createAnswer(questionId, choosedOptionsId);
         Optional<User> user = userRepository.findByUsername(principal.getName());
-        questionService.addAnswer(user.get(), answer);
+        Optional<Survey> survey = surveyRepository.findById(surveyId);
+        //TODO: add check isPresent()
+        questionService.addAnswer(user.get(), answer, survey.get());
 
         Question next = questionService.next(surveyId, questionId);
         if (null != next) {

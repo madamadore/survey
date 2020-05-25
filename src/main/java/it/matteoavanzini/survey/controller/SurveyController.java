@@ -40,8 +40,10 @@ public class SurveyController {
     @RequestMapping("/{sid:[\\d]+}/thanks")
     public String thanks(Principal principal, Model model, @PathVariable("sid") long surveyId) {
         Optional<User> user = userRepository.findByUsername(principal.getName());
-        questionService.closeSurveyResult(user.get());
-        SurveyResult result = questionService.getResult(user.get());
+        Optional<Survey> survey = surveyRepository.findById(surveyId);
+        //TODO: add check isPresent()
+        questionService.closeSurveyResult(user.get(), survey.get());
+        SurveyResult result = questionService.getResult(user.get(), survey.get());
         model.addAttribute("result", result);
         return "thanks";
     }
@@ -68,7 +70,9 @@ public class SurveyController {
                                 @PathVariable("sid") long surveyId, 
                                 Principal principal, Model model) {
         Optional<User> user = userRepository.findByUsername(principal.getName());
-        questionService.createSurveyResult(user.get());
+        Optional<Survey> survey = surveyRepository.findById(surveyId);
+        // TODO: add check isPresent()
+        questionService.createSurveyResult(user.get(), survey.get());
         session.setAttribute("surveyId", surveyId);
         Optional<Question> next = questionService.getQuestion(1);
         if (next.isPresent()) {
