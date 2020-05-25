@@ -16,7 +16,6 @@ public interface QuestionService {
     void closeSurveyResult(User user);
     SurveyResult getResult(User user);
     
-
     Answer createAnswer(long questionId, List<Long> choosedOptions);    
     
     Optional<Question> getQuestion(long id);
