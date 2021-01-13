@@ -28,6 +28,9 @@ import it.matteoavanzini.survey.repository.UserRepository;
 public class QuestionServiceIntegrationTest {
     
     @Autowired
+    SurveyResultService surveyResultService;
+
+    @Autowired
     QuestionService questionService;
 
     @Autowired
@@ -87,15 +90,15 @@ public class QuestionServiceIntegrationTest {
         surveyResult.setSurvey(survey);
         surveyResultRepository.save(surveyResult);
 
-        SurveyResult result = questionService.getResult(user, survey);
+        SurveyResult result = surveyResultService.getResult(user, survey);
         assertNotNull(result);
     }
 
     @Test
     public void testCreateSurveyResult() {
-        questionService.createSurveyResult(user, survey);
+        surveyResultService.createSurveyResult(user, survey);
 
-        SurveyResult result = questionService.getResult(user, survey);
+        SurveyResult result = surveyResultService.getResult(user, survey);
         assertNotNull(result);
         assertNotNull(result.getStartDate());
         assertNotNull(result.getSurvey());
@@ -109,12 +112,12 @@ public class QuestionServiceIntegrationTest {
     
     @Test
     public void testCloseSurveyResult() throws InterruptedException {
-        questionService.createSurveyResult(user, survey);
+        surveyResultService.createSurveyResult(user, survey);
 
         Thread.sleep(1000);
         
-        questionService.closeSurveyResult(user, survey);
-        SurveyResult result = questionService.getResult(user, survey);
+        surveyResultService.closeSurveyResult(user, survey);
+        SurveyResult result = surveyResultService.getResult(user, survey);
         assertNotNull(result.getEndDate());
 
         Date startDate = result.getStartDate();

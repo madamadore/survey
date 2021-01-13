@@ -23,6 +23,7 @@ import it.matteoavanzini.survey.model.User;
 import it.matteoavanzini.survey.repository.SurveyRepository;
 import it.matteoavanzini.survey.repository.UserRepository;
 import it.matteoavanzini.survey.service.QuestionService;
+import it.matteoavanzini.survey.service.SurveyResultService;
 
 @Controller
 @RequestMapping("/survey")
@@ -35,15 +36,18 @@ public class SurveyController {
     QuestionService questionService;
 
     @Autowired
+    SurveyResultService surveyResultService;
+
+    @Autowired
     UserRepository userRepository;
     
     @RequestMapping("/{sid:[\\d]+}/thanks")
     public String thanks(Principal principal, Model model, @PathVariable("sid") long surveyId) {
         Optional<User> user = userRepository.findByUsername(principal.getName());
         Optional<Survey> survey = surveyRepository.findById(surveyId);
-        //TODO: add check isPresent()
-        questionService.closeSurveyResult(user.get(), survey.get());
-        SurveyResult result = questionService.getResult(user.get(), survey.get());
+        
+        surveyResultService.closeSurveyResult(user.get(), survey.get());
+        SurveyResult result = surveyResultService.getResult(user.get(), survey.get());
         model.addAttribute("result", result);
         return "thanks";
     }
@@ -71,31 +75,54 @@ public class SurveyController {
                                 Principal principal, Model model) {
         Optional<User> user = userRepository.findByUsername(principal.getName());
         Optional<Survey> survey = surveyRepository.findById(surveyId);
-        // TODO: add check isPresent()
-        questionService.createSurveyResult(user.get(), survey.get());
-        session.setAttribute("surveyId", surveyId);
-        Optional<Question> next = questionService.getQuestion(1);
-        if (next.isPresent()) {
-            long qid = next.get().getId();
-            return "redirect:/survey/" + surveyId +"/question/" + qid + "/show";
+
+        if (!survey.isPresent()) throw new HTTPException(400);
+        Survey surveyObject = survey.get();
+
+        SurveyResult result = surveyResultService.getResult(user.get(), surveyObject);
+        if (null == result) {
+            surveyResultService.createSurveyResult(user.get(), survey.get());
+            session.setAttribute("surveyId", surveyId);
+        } 
+
+        if (surveyObject.getQuestions().size() > 0) {
+            return "redirect:/survey/" + surveyId +"/question/show";
         }
         return "redirect:/survey/" + surveyId +"/thanks";
     }
-
-    @GetMapping("/{sid:[\\d]+}/question/{qid:[\\d]+}/show")
-    public String show(HttpSession session, Model model, 
-                        @PathVariable("sid") long surveyId,
-                        @PathVariable("qid") long questionId) {
+    
+    @GetMapping("/{sid:[\\d]+}/question/show")
+    public String show(HttpSession session, Model model, Principal principal,
+                        @PathVariable("sid") long surveyId) {
+        Long questionId = null;
         Long sessionSurveyId = (Long) session.getAttribute("surveyId");
         if (sessionSurveyId.longValue() != surveyId) {
             throw new HTTPException(400);
         }
-        Optional<Question> question = questionService.getQuestion(questionId);
-        if (question.isPresent()) {
-            model.addAttribute("question", question.get());
-            model.addAttribute("surveyId", surveyId);
-            return "question/show";
-        }
+
+        Optional<User> user = userRepository.findByUsername(principal.getName());
+        Optional<Survey> survey = surveyRepository.findById(surveyId);
+        SurveyResult result = surveyResultService.getResult(user.get(), survey.get());
+        if (!result.isCompleted()) {
+            Question lastQuestion = null;
+            if (result.getAnswers().size() > 0) {
+                int lastAnswerIndex = result.getAnswers().size() - 1;
+                lastQuestion = result.getAnswers().get(lastAnswerIndex).getQuestion();
+            } else {
+                lastQuestion = survey.get().getQuestions().get(0).getQuestion();
+            }
+            
+            Question nextQuestion = questionService.next(surveyId, lastQuestion.getId());
+            questionId = nextQuestion.getId();
+
+            Optional<Question> question = questionService.getQuestion(questionId);
+            if (question.isPresent()) {
+                model.addAttribute("question", question.get());
+                model.addAttribute("surveyId", surveyId);
+                return "question/show";
+            }
+        } 
+        
         return "redirect:/"+surveyId+"/thanks";
     }
 

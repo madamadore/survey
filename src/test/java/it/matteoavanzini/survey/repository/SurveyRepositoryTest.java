@@ -32,8 +32,8 @@ public class SurveyRepositoryTest {
         Survey survey = new Survey();
         survey.setTitle("Test Survey");
         survey.setDescription("description");
-        entityManager.persist(survey);
 
+        entityManager.persist(survey);
         entityManager.flush();
     }
 

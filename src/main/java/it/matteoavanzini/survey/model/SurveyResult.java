@@ -1,7 +1,7 @@
 package it.matteoavanzini.survey.model;
 
-import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -40,11 +40,15 @@ public class SurveyResult {
 
     public SurveyResult() {
         startDate = new Date();
-        answers = new ArrayList<>();
+        answers = new LinkedList<>();
     }
 
     public void addAnswer(Answer answer) {
         answers.add(answer);
     }
 
+    public boolean isCompleted() {
+        if (endDate != null) return true;
+        return false;
+    }
 }

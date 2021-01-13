@@ -21,12 +21,16 @@ import it.matteoavanzini.survey.model.User;
 import it.matteoavanzini.survey.repository.SurveyRepository;
 import it.matteoavanzini.survey.repository.UserRepository;
 import it.matteoavanzini.survey.service.QuestionService;
+import it.matteoavanzini.survey.service.SurveyResultService;
 
 @Controller
 @RequestMapping("/answer")
 public class AnswerController {
 
     Logger logger = LoggerFactory.getLogger(AnswerController.class);
+    
+    @Autowired
+    SurveyResultService surveyResultService;
     
     @Autowired
     QuestionService questionService;
@@ -43,16 +47,17 @@ public class AnswerController {
                         @RequestParam("qid") int questionId, Model model, Principal principal) {
 
         if (null == choosedOptionsId) choosedOptionsId = new ArrayList<>();
-        Answer answer = questionService.createAnswer(questionId, choosedOptionsId);
+        Answer answer = surveyResultService.createAnswer(questionId, choosedOptionsId);
         Optional<User> user = userRepository.findByUsername(principal.getName());
         Optional<Survey> survey = surveyRepository.findById(surveyId);
-        //TODO: add check isPresent()
-        questionService.addAnswer(user.get(), answer, survey.get());
+        
+        if (survey.isPresent()) {
+            surveyResultService.addAnswer(user.get(), answer, survey.get());
+        }
 
         Question next = questionService.next(surveyId, questionId);
         if (null != next) {
-            long qid = next.getId();
-            return "redirect:/survey/" + surveyId + "/question/" + qid + "/show";
+            return "redirect:/survey/" + surveyId + "/question/show";
         }
         
         return "redirect:/survey/" + surveyId + "/thanks";

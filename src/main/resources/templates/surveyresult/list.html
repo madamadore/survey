@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<head>
+    <title>Questions</title>
+    <span th:insert="home :: stylesheet"></span>
+</head>
+<body>
+    <nav th:insert="home :: menu"></nav>
+    <div class="container">
+        <table class="table table-striped">
+            <tr>
+                <th>User</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Time</th>
+                <th>Result</th>
+            </tr>
+            <tr th:each="result: ${allResults}">
+                <td th:text="${result.user.username}">1</td>
+                <td th:text="${#dates.format(result.startDate, 'dd/MM/yyyy HH:mm')}">Titolo</td>
+                <td th:text="${#dates.format(result.endDate, 'dd/MM/yyyy HH:mm')}">Titolo</td>
+                <td><span th:with="days=${T(java.util.concurrent.TimeUnit).MINUTES}, 
+                    millis=${T(java.util.concurrent.TimeUnit).MILLISECONDS}" 
+                    th:text="${result.endDate != null} ? ${days.convert(result.endDate.getTime() - result.startDate.getTime(), millis)} : ''"></span> min.
+                </td>
+                <td th:text="${result.total}">8</td>
+            </tr>
+        </table>
+    </div>
+    <span th:insert="home :: footer"></span>
+</body>
+</html>

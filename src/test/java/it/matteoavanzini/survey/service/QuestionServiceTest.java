@@ -47,7 +47,16 @@ public class QuestionServiceTest {
         public QuestionService questionService() {
             return new QuestionServiceImpl();
         }
+
+        @Bean
+        public SurveyResultService surveyResultService() {
+            return new SurveyResultServiceImpl();
+        }
     }
+
+
+    @Autowired
+    SurveyResultService surveyResultService;
 
     @Autowired
     QuestionService questionService;
@@ -86,6 +95,7 @@ public class QuestionServiceTest {
     @Before
     public void setUp() {
         expectedSecondQuestion = getSecondSampleQuestion();
+
         survey = new Survey();
         survey.setTitle("Sample test");
         survey.addQuestion(getFirstSampleQuestion());
@@ -114,15 +124,15 @@ public class QuestionServiceTest {
     
     @Test
     public void testGetResult() {
-        SurveyResult result = questionService.getResult(user, survey);
+        SurveyResult result = surveyResultService.getResult(user, survey);
         assertNotNull(result);
     }
 
     @Test
     public void testCreateSurveyResult() {
-        questionService.createSurveyResult(user, survey);
+        surveyResultService.createSurveyResult(user, survey);
         
-        SurveyResult result = questionService.getResult(user, survey);
+        SurveyResult result = surveyResultService.getResult(user, survey);
         assertNotNull(result);
         assertNotNull(result.getStartDate());
         assertNotNull(result.getSurvey());
@@ -138,8 +148,8 @@ public class QuestionServiceTest {
     public void testCloseSurveyResult() {
         testCreateSurveyResult();
 
-        questionService.closeSurveyResult(user, survey);
-        SurveyResult result = questionService.getResult(user, survey);
+        surveyResultService.closeSurveyResult(user, survey);
+        SurveyResult result = surveyResultService.getResult(user, survey);
         assertNotNull(result.getEndDate());
 
         Date startDate = result.getStartDate();

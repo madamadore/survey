@@ -1,28 +1,344 @@
-title: "Spring Boot"
-description: "Test"
-- question:
-    title: Controller
-    description: Un controller è un component
-    multiple: false
-    - option:
-        text: vero
-        value: 4
-    - option:
-        text: falso
-        value: 0
-- question:
-    title: Spring Boot
-    description: Quale di queste affermazioni è vera?
-    multiple: true
-    - option:
-        text: con Spring Boot si può creare ogni tipo di applicazioni
-        value: 2
-    - option:
-        text: Spring ha bisogno di essere inizializzato con Spring Boot
-        value: 0
-    - option:
-        text: Spring è un framework open-source
-        value: 2
-    - option:
-        text: Spring e Spring Boot sono la stessa cosa
-        value: 0
+survey:    
+    title: "Spring Boot"
+    description: "Test"
+    questions:
+        -
+            title: "Controller"
+            description: "L'annotation @Controller serve per:"
+            multiple: true
+            options:
+                -
+                    text: "definire un Controller MVC"
+                    value: 1
+                -
+                    text: "definire un componente Spring"
+                    value: 1
+                -
+                    text: "definire un bean"
+                    value: 0
+                -
+                    text: "definire un repository"
+                    value: 0
+        -
+            title: Repository
+            description: "Che cos'è un repository?"
+            multiple: true
+            options:
+                -
+                    text: "un particolare tipo di Bean"
+                    value: 0
+                -
+                    text: "Un componente Spring"
+                    value: 1
+                -
+                    text: "una classe che <i>dialoga</i> con il database"
+                    value: 1
+                -
+                    text: "una classe che contiene la <i>logica</i> dell'applicazione"
+                    value: 0
+        -
+            title: Bean
+            description: "Un Bean può essere definito..."
+            multiple: false
+            options:
+                -
+                    text: "un bean non può essere definito"
+                    value: 0
+                -
+                    text: "ovunque, anche a runtime"
+                    value: 0
+                -
+                    text: "in una classe qualsiasi"
+                    value: 0
+                -
+                    text: "solo in una classe annotata come @Configuration"
+                    value: 1
+        -
+            title: Component
+            description: "L'annotation @Component serve per"
+            multiple: true
+            options:
+                -
+                    text: "definire un controller"
+                    value: 0
+                -
+                    text: "definire un generico componente Spring"
+                    value: 1
+                -
+                    text: "definire un oggetto nel contesto di Spring"
+                    value: 1
+                -
+                    text: "definire un repository"
+                    value: 0
+        -
+            title: Test
+            description: "L'annotation @Test serve per"
+            multiple: false
+            options:
+                -
+                    text: "definire una classe che contiene dei Test"
+                    value: 0
+                -
+                    text: "eseguire un Test"
+                    value: 0
+                -
+                    text: "Identificare un metodo come test all'interno di una classe"
+                    value: 1
+                -
+                    text: "definire un insieme di test"
+                    value: 0
+        -
+            title: Route
+            description: "Indica quali delle seguenti annotations definisce una route con method POST verso l'indirizzo myroute"
+            multiple: true
+            options:
+                -
+                    text: "@RequestMapping(value='/myroute', method=RequestMethod.POST)"
+                    value: 1
+                -
+                    text: "@RequestMapping('/myroute')"
+                    value: 0
+                -
+                    text: "@PostMapping"
+                    value: 0
+                -
+                    text: "@PostMapping('/myroute')"
+                    value: 1
+        -
+            title: Request
+            description: "L'annotation @RequestParam serve per:"
+            multiple: false
+            options:
+                -
+                    text: "Configurare una generica route in un controller"
+                    value: 0
+                -
+                    text: "Associare un parametro della Request con il parametro di un metodo"
+                    value: 1
+                -
+                    text: "Definire i parametri nell'header di una request"
+                    value: 0
+                -
+                    text: "Definire una parte di un URL come parametro di un metodo"
+                    value: 0
+        -
+            title: Request
+            description: "Che differenza c'è fra @RequestParam e @PathVariable?"
+            multiple: false
+            options:
+                -
+                    text: "Non c'è differenza"
+                    value: 0
+                -
+                    text: "@RequestParam associa un parametro di una Request con quello di un metodo, @PathVariable definisce una route"
+                    value: 0
+                -
+                    text: "@RequestParam definisce una route, @PathVariable associa un parametro di una Request con quello di un metodo"
+                    value: 0
+                -
+                    text: "@RequestParam associa un parametro di una Request con quello di un metodo, @PathVariable associa una parte di una route."
+                    value: 1
+        -
+            title: Controller
+            description: "In un controller si può..."
+            multiple: true
+            options:
+                -
+                    text: "Definire delle route"
+                    value: 1
+                -
+                    text: "Definire una route di base per tutti i metodi ivi contenuti"
+                    value: 1
+                -
+                    text: "Usare uno o più repository"
+                    value: 1
+                -
+                    text: "Usare <i>al massimo</i> un repository"
+                    value: 0
+        -
+            title: Component
+            description: "Indica quali annotations definiscono un componente Spring"
+            multiple: true
+            options:
+                -
+                    text: "@Bean"
+                    value: 0
+                -
+                    text: "@Service"
+                    value: 1
+                -
+                    text: "@Repository"
+                    value: 1
+                -
+                    text: "@Component"
+                    value: 1
+        -
+            title: Test
+            description: "L'annotation @RunWith..."
+            multiple: false
+            options:
+                -
+                    text: "va usata su tutte le classi che definiscono uno o più test"
+                    value: 1
+                -
+                    text: "va usata per definire un integration test"
+                    value: 0
+                -
+                    text: "va usata sui metodi di test per indicare uno specifico contesto"
+                    value: 0
+                -
+                    text: "non è un'annotation riconosciuta da Spring"
+                    value: 0
+        -
+            title: Test
+            description: "L'annotation @SpringBootTest..."
+            multiple: false
+            options:
+                -
+                    text: "va usata su tutte le classi che definiscono uno o più test"
+                    value: 0
+                -
+                    text: "va usata per definire un integration test"
+                    value: 1
+                -
+                    text: "va usata su metodi specifici per indicare un test"
+                    value: 0
+                -
+                    text: "non è un'annotation riconosciuta da Spring"
+                    value: 0
+        - 
+            title: Controller
+            description: "L'annotations @ModelAttribute"
+            multiple: false
+            options:
+                -
+                    text: "Associa i parametri di una request con un classe 'modello'"
+                    value: 1
+                -
+                    text: "Associa i parametri della request con un oggetto Model"
+                    value: 0
+                -
+                    text: "Aggiunge un attributo ad un oggetto Model, associandolo ad una vista"
+                    value: 0
+                -
+                    text: "non è un'annotation riconosciuta da Spring"
+                    value: 0
+        - 
+            title: Test
+            description: "Come si può cambiare la configurazione dell'applicazione per i test?"
+            multiple: true
+            options:
+                -
+                    text: "Usand l'annotazione @Configuration"
+                    value: 0
+                -
+                    text: "Usando i profili"
+                    value: 1
+                -
+                    text: "Usando l'annotazione @TestConfiguraion"
+                    value: 1
+                -
+                    text: "Usando l'annotazione @SpringBootTest"
+                    value: 0
+        - 
+            title: Spring
+            description: "Quale di queste frasi è vera?"
+            multiple: true
+            options:
+                -
+                    text: "Spring Boot semplifica e velocizza la configurazione di un'applicazione Spring"
+                    value: 1
+                -
+                    text: "Spring Boot è indispensabile"
+                    value: 0
+                -
+                    text: "Spring e Spring Boot sono sinonimi dello stesso framework"
+                    value: 0
+                -
+                    text: "Spring si basa sulle specifiche J2EE"
+                    value: 1
+        - 
+            title: JPA
+            description: "L'annotazione @Table si usa per...?"
+            multiple: false
+            options:
+                -
+                    text: "Definire una Entity"
+                    value: 0
+                -
+                    text: "Definire il nome di una tabella, quando diverso dalla classe"
+                    value: 1
+                -
+                    text: "Definire le colonne di una tabella"
+                    value: 0
+                -
+                    text: "Definire la tabella di join per relazioni ManyToMany"
+                    value: 0
+        -
+            title: JPA
+            description: "L'annotazione @Entity si usa per...?"
+            multiple: false
+            options:
+                -
+                    text: "Definire una Entity"
+                    value: 1
+                -
+                    text: "Definire il nome di una tabella, quando diverso dalla classe"
+                    value: 0
+                -
+                    text: "Definire le colonne di una tabella"
+                    value: 0
+                -
+                    text: "Definire la tabella di join per relazioni ManyToMany"
+                    value: 0
+        -
+            title: JPA
+            description: "L'annotazione @Column si usa per...?"
+            multiple: false
+            options:
+                -
+                    text: "Definire una Entity"
+                    value: 0
+                -
+                    text: "Definire il nome di una tabella, quando diverso dalla classe"
+                    value: 0
+                -
+                    text: "Definire le colonne di una tabella"
+                    value: 1
+                -
+                    text: "Definire la tabella di join per relazioni ManyToMany"
+                    value: 0
+        - 
+            title: JPA
+            description: "L'annotazione @OneToMany..."
+            multiple: false
+            options:
+                -
+                    text: "non è un'annotazione valida"
+                    value: 0
+                -
+                    text: "Definisce un insieme di oggetti"
+                    value: 0
+                -
+                    text: "Definisce una relazione uno-a-molti fra due modelli"
+                    value: 1
+                -
+                    text: "Vuole <i>sempre</i> anche un'annotaione @ManyToOne"
+                    value: 0
+        -
+            title: Spring
+            description: "L'annotazione @Autowired..."
+            multiple: false
+            options:
+                -
+                    text: "non è un'annotazione valida"
+                    value: 0
+                -
+                    text: "Serve per definire un componente"
+                    value: 0
+                -
+                    text: "Serve per iniettare un componente in una classe"
+                    value: 1
+                -
+                    text: "Serve per iniettare un test in una classe"
+                    value: 0

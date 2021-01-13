@@ -24,7 +24,6 @@ public class Survey {
 
     private String title;
     private String description;
-    
     @OneToMany(mappedBy = "survey", cascade = CascadeType.ALL)
     private List<QuestionSurvey> questions;
 

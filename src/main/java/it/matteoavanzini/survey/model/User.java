@@ -13,6 +13,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.Transient;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -25,7 +26,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class User implements UserDetails {
-    
+
     @Id    
     @GeneratedValue(strategy = GenerationType.AUTO)    
     private long id;
@@ -33,12 +34,27 @@ public class User implements UserDetails {
     @Column(unique = true)
     private String username;
     private String password;
+    private String name;
+    private String surname;
 
     @OneToMany(cascade = CascadeType.ALL, fetch=FetchType.EAGER)
     private List<Role> roles;
     
     public User() {
         roles = new ArrayList<>();
+    }
+
+    public User(String surname, String name, String email, String password) {
+        this(surname, name, email, password, "ROLE_USER");
+    }
+
+    public User(String surname, String name, String email, String password, String role) {
+        this();
+        this.surname = surname;
+        this.name = name;
+        this.username = email;
+        this.password = password;
+        addRole(role);
     }
 
     @Override    

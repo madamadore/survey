@@ -1,57 +1,26 @@
 package it.matteoavanzini.survey;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.context.annotation.PropertySource;
 
+import it.matteoavanzini.survey.config.YamlPropertySourceFactory;
 import it.matteoavanzini.survey.model.Option;
 import it.matteoavanzini.survey.model.Question;
-import it.matteoavanzini.survey.model.Survey;
-import it.matteoavanzini.survey.model.User;
-import it.matteoavanzini.survey.repository.SurveyRepository;
-import it.matteoavanzini.survey.repository.UserRepository;
 
 @SpringBootApplication
+@PropertySource(value = "classpath:survey.yml", factory = YamlPropertySourceFactory.class)
 public class SurveyApplication implements CommandLineRunner {
 
-	@Autowired
-    SurveyRepository surveyRepository;
-    
-    @Autowired
-    UserRepository userRepository;
 
-    @Autowired
-    PasswordEncoder passwordEncoder;
-	
 	public static void main(String[] args) {
 		SpringApplication.run(SurveyApplication.class, args);
 	}
 
 	@Override
-	public void run(String... args) throws Exception {
-		Question simpleQuestion = getSimpleQuestion();
-        Question multipleQuestion = getMultipleQuestion();
-
-        Survey survey = new Survey("Example");
-        survey.addQuestion(simpleQuestion);
-        survey.addQuestion(multipleQuestion);
-
-        surveyRepository.save(survey);
-
-        User admin = new User();
-        admin.setUsername("admin");
-        admin.setPassword(passwordEncoder.encode("admin"));
-        admin.addRole("ROLE_ADMIN");
-
-        User user = new User();
-        user.setUsername("user");
-        user.setPassword(passwordEncoder.encode("user"));
-        user.addRole("ROLE_USER");
-
-        userRepository.save(admin);
-        userRepository.save(user);
+	public void run(String... args) throws Exception {        
+        
 	}
 
 	private Question getSimpleQuestion() {
